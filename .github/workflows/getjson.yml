@@ -37,5 +37,5 @@ jobs:
           git config --global user.name "vishwas-r"
           git config --global user.email "vishwas.r.jnv@gmail.com"
           git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git commit -m "chore: Update domains.json [$(date +'%Y-%m-%d %H:%M')]"
+          git commit -m "Update domains list [$(date +'%Y-%m-%d %H:%M')]"
           git push origin HEAD:main
