@@ -1,0 +1,41 @@
+name: Update Domains JSON
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+
+jobs:
+  update-domains:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PHISH_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Download domains.json
+        run: curl -s -o domains.json https://hole.cert.pl/domains/v2/domains.json
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add domains.json
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PHISH_GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "vishwas-r"
+          git config --global user.email "vishwas.r.jnv@gmail.com"
+          git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git commit -m "chore: Update domains.json [$(date +'%Y-%m-%d %H:%M')]"
+          git push origin HEAD:main
