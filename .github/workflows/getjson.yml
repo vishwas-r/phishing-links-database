@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   repository_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Daily at midnight UTC
-
+    - cron: '0 */12 * * *'  # Every 12 hours
+    
 jobs:
   update-domains:
     runs-on: ubuntu-latest
