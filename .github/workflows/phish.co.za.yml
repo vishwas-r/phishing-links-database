@@ -22,12 +22,12 @@ jobs:
       - name: Convert domains to JSON format
         run: |
           # Read the phishing-domains.txt file, convert to JSON
-          jq -R -s -c 'split("\n") | map(select(length > 0) | {DomainAddress: .})' phishing-domains.txt > phish.co-db.json
+          jq -R -s -c 'split("\n") | map(select(length > 0) | {DomainAddress: .})' phishing-domains.txt > phishcoza_urls.json
 
       - name: Check for changes
         id: changes
         run: |
-          git add phish.co-db.json
+          git add phishcoza_urls.json
           if git diff --cached --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
