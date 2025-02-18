@@ -17,12 +17,12 @@ jobs:
           fetch-depth: 0
 
       - name: Download phishtank-domains.json
-        run: curl -s -o phishtank-domains.json http://data.phishtank.com/data/online-valid.json
+        run: curl -s -o phishtank_urls.json http://data.phishtank.com/data/online-valid.json
 
       - name: Check for changes
         id: changes
         run: |
-          git add phishtank-domains.json
+          git add phishtank_urls.json
           if git diff --cached --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
