@@ -1,0 +1,46 @@
+name: Update Phishing Database JSON
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'  # Every 12 hours
+
+jobs:
+  update-domains:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PHISH_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Download phishing domains
+        run: curl -s -o phishing-domains.txt https://phish.co.za/latest/phishing-domains-ACTIVE.txt
+
+      - name: Convert domains to JSON format
+        run: |
+          # Read the phishing-domains.txt file, convert to JSON
+          jq -R -s -c 'split("\n") | map(select(length > 0) | {DomainAddress: .})' phishing-domains.txt > phishing-database.json
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add phishing-database.json
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PHISH_GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "vishwas-r"
+          git config --global user.email "vishwas.r.jnv@gmail.com"
+          git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git commit -m "Update phishing domains [$(date +'%Y-%m-%d %H:%M')]"
+          git push origin HEAD:main
