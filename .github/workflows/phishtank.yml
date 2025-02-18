@@ -1,4 +1,4 @@
-name: Update Phishtank JSON
+name: Update Phishtank Database JSON
 
 on:
   workflow_dispatch:
