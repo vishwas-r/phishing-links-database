@@ -1,4 +1,4 @@
-name: Update Domains JSON
+name: Update cert.pl Database JSON
 
 on:
   workflow_dispatch:
