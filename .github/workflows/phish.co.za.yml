@@ -1,4 +1,4 @@
-name: Update Phishing Database JSON
+name: Update Phish.co.za Database JSON
 
 on:
   workflow_dispatch:
