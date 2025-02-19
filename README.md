@@ -8,7 +8,7 @@ The phishing URLs are fetched from:
 
 - **[CERT Polska Warning List](https://cert.pl/en/warning-list/)**
 - **[Phish.co.za Active Phishing Domains](https://phish.co.za/latest/phishing-domains-ACTIVE.txt)**
-- **[PhishTank Online Valid Dataset](http://data.phishtank.com/data/online-valid.json)**
+- **[PhishTank Online Valid Dataset](https://www.phishtank.com/developer_info.php)**
 
 ## 🚀 Usage
 
