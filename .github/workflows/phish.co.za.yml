@@ -19,10 +19,9 @@ jobs:
       - name: Download phishing domains
         run: curl -s -o phishing-domains.txt https://phish.co.za/latest/phishing-domains-ACTIVE.txt
 
-      - name: Convert domains to JSON format
+      - name: Convert domains to JSON array
         run: |
-          # Read the phishing-domains.txt file, convert to JSON
-          jq -R -s -c 'split("\n") | map(select(length > 0) | {DomainAddress: .})' phishing-domains.txt > phishcoza_urls.json
+          jq -R -s -c 'split("\n") | map(select(length > 0))' phishing-domains.txt > phishcoza_urls.json
 
       - name: Check for changes
         id: changes
