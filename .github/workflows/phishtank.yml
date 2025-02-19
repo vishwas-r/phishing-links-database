@@ -19,6 +19,10 @@ jobs:
       - name: Download phishtank-domains.json
         run: curl -s -o phishtank_urls.json http://data.phishtank.com/data/online-valid.json
 
+      - name: Process JSON file
+        run: |
+          jq '[.[] | {phish_id, url, online}]' phishtank_urls.json > temp.json && mv temp.json phishtank_urls.json
+
       - name: Check for changes
         id: changes
         run: |
@@ -37,5 +41,5 @@ jobs:
           git config --global user.name "vishwas-r"
           git config --global user.email "vishwas.r.jnv@gmail.com"
           git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git commit -m "Update domains list [$(date +'%Y-%m-%d %H:%M')]"
+          git commit -m "Update phishtank URLs [$(date +'%Y-%m-%d %H:%M')]"
           git push origin HEAD:main
