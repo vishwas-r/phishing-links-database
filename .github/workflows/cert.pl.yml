@@ -19,14 +19,14 @@ jobs:
       - name: Download domains.json
         run: curl -s -o domains.json https://hole.cert.pl/domains/v2/domains.json
 
-      - name: Process JSON file
+      - name: Extract domain addresses into JSON array
         run: |
-          jq '[.[] | {DomainAddress}]' domains.json > temp.json && mv temp.json domains.json
+          jq '[.[] | .DomainAddress]' domains.json > cert_urls.json
 
       - name: Check for changes
         id: changes
         run: |
-          git add domains.json
+          git add cert_urls.json
           if git diff --cached --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
@@ -41,5 +41,5 @@ jobs:
           git config --global user.name "vishwas-r"
           git config --global user.email "vishwas.r.jnv@gmail.com"
           git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git commit -m "Update domains list [$(date +'%Y-%m-%d %H:%M')]"
+          git commit -m "Update cert.pl domains [$(date +'%Y-%m-%d %H:%M')]"
           git push origin HEAD:main
