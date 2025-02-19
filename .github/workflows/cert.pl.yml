@@ -19,6 +19,10 @@ jobs:
       - name: Download domains.json
         run: curl -s -o domains.json https://hole.cert.pl/domains/v2/domains.json
 
+      - name: Process JSON file
+        run: |
+          jq '[.[] | {DomainAddress}]' domains.json > temp.json && mv temp.json domains.json
+
       - name: Check for changes
         id: changes
         run: |
