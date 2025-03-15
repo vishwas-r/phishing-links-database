@@ -10,6 +10,11 @@ The phishing URLs are fetched from:
 - **[Phish.co.za Active Phishing Domains](https://phish.co.za/latest/phishing-domains-ACTIVE.txt)**
 - **[PhishTank Online Valid Dataset](https://www.phishtank.com/developer_info.php)**
 
+## 📁 JSON Files
+- [phishcoza_urls.json](https://vishwas-r.github.io/phishing-links-database/phishcoza_urls.json)
+- [cert_urls.json](https://vishwas-r.github.io/phishing-links-database/cert_urls.json)
+- [phishtank_urls.json](https://vishwas-r.github.io/phishing-links-database/phishtank_urls.json)
+
 ## 🚀 Usage
 
 You can use this database to check for phishing sites in:
