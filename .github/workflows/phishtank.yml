@@ -1,11 +1,9 @@
-name: Update Phishtank Database JSON
+name: Update Phishtank URLs
 
 on:
   workflow_dispatch:
   repository_dispatch:
-  #schedule:
-    #- cron: '0 0 * * *'
-    
+
 jobs:
   update-domains:
     runs-on: ubuntu-latest
@@ -16,14 +14,23 @@ jobs:
           token: ${{ secrets.PHISH_GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Download and extract phishtank JSON
+      - name: Download and process data
         run: |
-          curl -s -o phishtank_data.json.gz http://data.phishtank.com/data/online-valid.json.gz
-          gzip -d phishtank_data.json.gz
+          # Download gzipped data with timestamp
+          curl -sL -o phishtank_data.json.gz http://data.phishtank.com/data/online-valid.json.gz
+          
+          # Validate and extract gzip
+          if file phishtank_data.json.gz | grep -q 'gzip compressed data'; then
+            echo "Extracting valid gzip file"
+            gunzip -c phishtank_data.json.gz > raw_data.json
+          else
+            echo "Error: Downloaded file is not a valid gzip archive"
+            exit 1
+          fi
 
-      - name: Process JSON file
-        run: |
-          jq '[.[] | .url]' phishtank_data.json > phishtank_urls.json
+          # Process JSON and extract URLs
+          jq -e 'map(.url) | unique' raw_data.json > phishtank_urls.json
+          rm phishtank_data.json.gz raw_data.json
 
       - name: Check for changes
         id: changes
@@ -43,5 +50,5 @@ jobs:
           git config --global user.name "vishwas-r"
           git config --global user.email "vishwas.r.jnv@gmail.com"
           git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git commit -m "Update phishtank URLs [$(date +'%Y-%m-%d %H:%M')]"
+          git commit -m "PhishTank URLs update: $(date +'%Y-%m-%d %H:%M UTC')"
           git push origin HEAD:main
