@@ -17,14 +17,14 @@ jobs:
       - name: Download and process phishtank data
         run: |
           # Download with '-L' to follow redirects and '-k' to handle SSL issues
-          curl -sLk -o phishtank_data.json.gz http://data.phishtank.com/data/online-valid.json.gz
+          curl -sLk -o online-valid.json.gz http://data.phishtank.com/data/online-valid.json.gz
           
           # Check if file is actually gzipped
-          if file phishtank_data.json.gz | grep -q gzip; then
-            gunzip -c phishtank_data.json.gz > phishtank_urls.json
+          if file online-valid.json.gz | grep -q gzip; then
+            gunzip -d -f online-valid.json.gz > phishtank_urls.json
           else
             echo "File is not gzipped, using directly"
-            mv phishtank_data.json.gz phishtank_urls.json
+            mv online-valid.json.gz phishtank_urls.json
           fi
 
       - name: Extract URLs
