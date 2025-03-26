@@ -16,12 +16,14 @@ jobs:
           token: ${{ secrets.PHISH_GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Download phishtank-domains.json
-        run: curl -s -o phishtank_urls.json http://data.phishtank.com/data/online-valid.json
+      - name: Download and extract phishtank JSON
+        run: |
+          curl -s -o phishtank_data.json.gz http://data.phishtank.com/data/online-valid.json.gz
+          gunzip -f phishtank_data.json.gz
 
       - name: Process JSON file
         run: |
-          jq '[.[] | {phish_id, url, online}]' phishtank_urls.json > temp.json && mv temp.json phishtank_urls.json
+          jq '[.[] | .url]' phishtank_data.json > phishtank_urls.json
 
       - name: Check for changes
         id: changes
