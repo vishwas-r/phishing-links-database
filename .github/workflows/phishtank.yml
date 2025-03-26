@@ -52,5 +52,5 @@ jobs:
           git config --global user.name "vishwas-r"
           git config --global user.email "vishwas.r.jnv@gmail.com"
           git remote set-url origin https://${{ secrets.PHISH_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git commit -m "PhishTank URLs update: $(date +'%Y-%m-%d %H:%M UTC')"
+          git commit -m "Update PhishTank URLs [$(date +'%Y-%m-%d %H:%M')]"
           git push origin HEAD:main
