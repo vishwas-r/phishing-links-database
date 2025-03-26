@@ -3,6 +3,8 @@ name: Update Phishtank Database JSON
 on:
   workflow_dispatch:
   repository_dispatch:
+  #schedule:
+    #- cron: '0 0 * * *'
     
 jobs:
   update-domains:
@@ -14,22 +16,14 @@ jobs:
           token: ${{ secrets.PHISH_GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Download and process phishtank data
+      - name: Download and extract phishtank JSON
         run: |
-          # Download with '-L' to follow redirects and '-k' to handle SSL issues
-          curl -sLk -o online-valid.json.gz http://data.phishtank.com/data/online-valid.json.gz
-          
-          # Check if file is actually gzipped
-          if file online-valid.json.gz | grep -q gzip; then
-            gunzip -d -f online-valid.json.gz > phishtank_urls.json
-          else
-            echo "File is not gzipped, using directly"
-            mv online-valid.json.gz phishtank_urls.json
-          fi
+          curl -s -o phishtank_data.json.gz http://data.phishtank.com/data/online-valid.json.gz
+          gzip -d phishtank_data.json.gz
 
-      - name: Extract URLs
+      - name: Process JSON file
         run: |
-          jq -r '[.[].url]' phishtank_urls.json > temp.json && mv temp.json phishtank_urls.json
+          jq '[.[] | .url]' phishtank_data.json > phishtank_urls.json
 
       - name: Check for changes
         id: changes
