@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download phishing domains
-        run: curl -s -o phishing-domains.txt https://phish.co.za/latest/phishing-domains-ACTIVE.txt
+        run: curl -s -o phishing-domains.txt https://phish.co.za/latest/phishing-links-ACTIVE.txt
 
       - name: Convert domains to JSON array
         run: |
