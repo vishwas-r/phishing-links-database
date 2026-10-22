@@ -4,20 +4,21 @@ on:
   workflow_dispatch:
   repository_dispatch:
   schedule:
-    - cron: '0 0 */2 * *'  # Every 2 days
+    - cron: '0 4 */4 * *'  # Every 4 days at 04:00 UTC
 
 jobs:
   update-domains:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PHISH_GITHUB_TOKEN }}
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Download phishing domains
-        run: curl -s -o phishing-domains.txt https://phish.co.za/latest/phishing-links-ACTIVE.txt
+        run: curl -s --max-time 120 -o phishing-domains.txt https://phish.co.za/latest/phishing-links-ACTIVE.txt
 
       - name: Convert domains to JSON array
         run: |

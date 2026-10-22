@@ -4,20 +4,21 @@ on:
   workflow_dispatch:
   repository_dispatch:
   schedule:
-    - cron: '0 */12 * * *'  # Every 12 hours
+    - cron: '0 2 */3 * *'  # Every 3 days at 02:00 UTC
     
 jobs:
   update-domains:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PHISH_GITHUB_TOKEN }}
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Download domains.json
-        run: curl -s -o domains.json https://hole.cert.pl/domains/v2/domains.json
+        run: curl -s --max-time 120 -o domains.json https://hole.cert.pl/domains/v2/domains.json
 
       - name: Extract domain addresses into JSON array
         run: |
