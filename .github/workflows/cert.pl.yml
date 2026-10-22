@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   repository_dispatch:
   schedule:
-    - cron: '0 2 */3 * *'  # Every 3 days at 02:00 UTC
+    - cron: '0 2 * * *'  # Daily at 02:00 UTC
     
 jobs:
   update-domains:
